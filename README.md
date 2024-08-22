@@ -22,17 +22,17 @@ NOTHING! Just download the latest file from releases:
 
 + Select a ZIP File:
 
-Use the GUI to browse and select the ZIP file you want to clean.
+    Use the GUI to browse and select the ZIP file you want to clean.
 
 + Process the ZIP File:
 
-The tool will either remove all files except those with .csv, .html, and .json extensions (as configured).
+    The tool will remove all files except those with .csv, .html, and .json extensions (as configured).
 
-A new cleaned ZIP file will be created in the same directory with the suffix _cleaned.zip.
+    A new cleaned ZIP file will be created in the same directory with the suffix _cleaned.zip.
 
 + View Results:
 
-A popup will inform you of the success, and you can view the cleaned ZIP file at the specified location.
+    A popup will inform you of the success, and you can view the cleaned ZIP file at the specified location.
 
 ## Trust and Credibility
 
