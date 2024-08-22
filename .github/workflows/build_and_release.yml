@@ -12,8 +12,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.11]  # Supported Python versions
+        os: [macos-latest, windows-latest]
+        python-version: [3.9]  # Supported Python versions
         include:
           - os: ubuntu-latest
             platform: linux
