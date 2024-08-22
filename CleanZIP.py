@@ -59,4 +59,4 @@ try:
 except Exception as e:
     print(f"Error removing temporary folder '{temp_folder}': {e}")
 
-sg.popup('Success', f'Cleaned ZIP file created: {output_zip_file_path}')
+sg.popup('Success!', f'A cleaned ZIP file has been created:\n{output_zip_file_path}')

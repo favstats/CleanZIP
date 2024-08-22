@@ -47,13 +47,13 @@ jobs:
       - name: Build executable with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --onefile --windowed delete_media_from_zip.py --version-file version.txt
+          pyinstaller --onefile --windowed CleanZIP.py --version-file version.txt
 
       - name: Zip the .app bundle (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-          pyinstaller --onefile --windowed delete_media_from_zip.py
-          zip -r dist/delete_media_from_zip.zip dist/delete_media_from_zip.app
+          pyinstaller --onefile --windowed CleanZIP.py
+          zip -r dist/CleanZIP.zip dist/CleanZIP.app
 
       - name: Verify build output (Windows)
         if: matrix.os == 'windows-latest'
@@ -64,15 +64,15 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: delete_media_from_zip_windows
-          path: dist/delete_media_from_zip.exe
+          name: CleanZIP_windows
+          path: dist/CleanZIP.exe
 
       - name: Archive build artifact (macOS)
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: delete_media_from_zip_macos
-          path: dist/delete_media_from_zip.zip
+          name: CleanZIP_macos
+          path: dist/CleanZIP.zip
 
   create-release:
     name: Create GitHub Release
@@ -83,14 +83,14 @@ jobs:
         if: always()
         uses: actions/download-artifact@v3
         with:
-          name: delete_media_from_zip_macos
+          name: CleanZIP_macos
           path: builds/macos/
 
       - name: Download build artifacts for Windows
         if: always()
         uses: actions/download-artifact@v3
         with:
-          name: delete_media_from_zip_windows
+          name: CleanZIP_windows
           path: builds/windows/
 
       - name: Create Release
@@ -107,7 +107,7 @@ jobs:
             - Windows (.exe)
             - macOS (.zip)
           files: |
-            builds/windows/delete_media_from_zip.exe
-            builds/macos/delete_media_from_zip.zip
+            builds/windows/CleanZIP.exe
+            builds/macos/CleanZIP.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
