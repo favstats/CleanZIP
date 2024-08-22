@@ -39,38 +39,43 @@ jobs:
       - name: Generate version.txt for Windows
         if: matrix.os == 'windows-latest'
         run: |
-          TAG_VERSION="${{ github.ref_name }}"  # Get the tag version
-          echo VSVersionInfo\( > version.txt
-          echo     ffi=FixedFileInfo\( >> version.txt
-          echo         filevers=\(${TAG_VERSION//v/},0\), >> version.txt
-          echo         prodvers=\(${TAG_VERSION//v/},0\), >> version.txt
-          echo         mask=0x3f, >> version.txt
-          echo         flags=0x0, >> version.txt
-          echo         OS=0x4, >> version.txt
-          echo         fileType=0x1, >> version.txt
-          echo         subtype=0x0, >> version.txt
-          echo         date=\(0,0\) >> version.txt
-          echo     \), >> version.txt
-          echo     kids=\[ >> version.txt
-          echo         StringFileInfo\( >> version.txt
-          echo             \[ >> version.txt
-          echo             StringTable\( >> version.txt
-          echo                 u'040904B0', >> version.txt
-          echo                 \[ >> version.txt
-          echo                 StringStruct\(u'CompanyName', u'University of Amsterdam'\), >> version.txt
-          echo                 StringStruct\(u'FileDescription', u'Delete Media From ZIP'\), >> version.txt
-          echo                 StringStruct\(u'FileVersion', u'${TAG_VERSION//v/}'\), >> version.txt
-          echo                 StringStruct\(u'InternalName', u'DeleteMediaFromZIP'\), >> version.txt
-          echo                 StringStruct\(u'LegalCopyright', u'© Dr. Fabio Votta. Distributed under the MIT License.'\), >> version.txt
-          echo                 StringStruct\(u'OriginalFilename', u'DeleteMediaFromZIP.exe'\), >> version.txt
-          echo                 StringStruct\(u'ProductName', u'Delete Media From ZIP'\), >> version.txt
-          echo                 StringStruct\(u'ProductVersion', u'${TAG_VERSION//v/}'\) >> version.txt
-          echo                 \] >> version.txt
-          echo             \], >> version.txt
-          echo         \), >> version.txt
-          echo         VarFileInfo\([VarStruct\(u'Translation', \[1033, 1200\]\)]\) >> version.txt
-          echo     \] >> version.txt
-          echo \) >> version.txt
+          $TAG_VERSION="${{ github.ref_name }}"  # Get the tag version
+          $versionInfo = @"
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=[$($TAG_VERSION.TrimStart('v').Replace('.',',')), 0],
+    prodvers=[$($TAG_VERSION.TrimStart('v').Replace('.',',')), 0],
+    mask=0x3f,
+    flags=0x0,
+    OS=0x4,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0,0)
+  ),
+  kids=[
+    StringFileInfo(
+      [
+      StringTable(
+        u'040904B0',
+        [
+        StringStruct(u'CompanyName', u'University of Amsterdam'),
+        StringStruct(u'FileDescription', u'Delete Media From ZIP'),
+        StringStruct(u'FileVersion', u'$($TAG_VERSION.TrimStart('v'))'),
+        StringStruct(u'InternalName', u'DeleteMediaFromZIP'),
+        StringStruct(u'LegalCopyright', u'© Dr. Fabio Votta. Distributed under the MIT License.'),
+        StringStruct(u'OriginalFilename', u'DeleteMediaFromZIP.exe'),
+        StringStruct(u'ProductName', u'Delete Media From ZIP'),
+        StringStruct(u'ProductVersion', u'$($TAG_VERSION.TrimStart('v'))')
+        ]
+      )
+      ]
+    ),
+    VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
+  ]
+)
+"@
+          $versionInfo | Set-Content -Path version.txt
+        shell: pwsh
 
       - name: Build executable with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
