@@ -53,6 +53,7 @@ with zipfile.ZipFile(output_zip_file_path, 'w') as zip_ref:
             file_path = os.path.join(root, file)
             zip_ref.write(file_path, os.path.relpath(file_path, temp_folder))
 
+
 # Clean up the temporary folder
 try:
     shutil.rmtree(temp_folder)  # Safely remove the entire directory tree
