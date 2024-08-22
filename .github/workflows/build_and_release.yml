@@ -36,15 +36,51 @@ jobs:
           python -m pip install --upgrade pip
           pip install wxPython PySimpleGUIWx pyinstaller
 
-      - name: Build executable with PyInstaller
+      - name: Generate version.txt for Windows
+        if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --onefile --windowed delete_media_from_zip.py
-        env:
-          WXWIN: ${{ github.workspace }}  # Fix for wxPython on Windows
+          TAG_VERSION="${{ github.ref_name }}"  # Get the tag version
+          echo VSVersionInfo\( > version.txt
+          echo     ffi=FixedFileInfo\( >> version.txt
+          echo         filevers=\(${TAG_VERSION//v/},0\), >> version.txt
+          echo         prodvers=\(${TAG_VERSION//v/},0\), >> version.txt
+          echo         mask=0x3f, >> version.txt
+          echo         flags=0x0, >> version.txt
+          echo         OS=0x4, >> version.txt
+          echo         fileType=0x1, >> version.txt
+          echo         subtype=0x0, >> version.txt
+          echo         date=\(0,0\) >> version.txt
+          echo     \), >> version.txt
+          echo     kids=\[ >> version.txt
+          echo         StringFileInfo\( >> version.txt
+          echo             \[ >> version.txt
+          echo             StringTable\( >> version.txt
+          echo                 u'040904B0', >> version.txt
+          echo                 \[ >> version.txt
+          echo                 StringStruct\(u'CompanyName', u'University of Amsterdam'\), >> version.txt
+          echo                 StringStruct\(u'FileDescription', u'Delete Media From ZIP'\), >> version.txt
+          echo                 StringStruct\(u'FileVersion', u'${TAG_VERSION//v/}'\), >> version.txt
+          echo                 StringStruct\(u'InternalName', u'DeleteMediaFromZIP'\), >> version.txt
+          echo                 StringStruct\(u'LegalCopyright', u'© Dr. Fabio Votta. Distributed under the MIT License.'\), >> version.txt
+          echo                 StringStruct\(u'OriginalFilename', u'DeleteMediaFromZIP.exe'\), >> version.txt
+          echo                 StringStruct\(u'ProductName', u'Delete Media From ZIP'\), >> version.txt
+          echo                 StringStruct\(u'ProductVersion', u'${TAG_VERSION//v/}'\) >> version.txt
+          echo                 \] >> version.txt
+          echo             \], >> version.txt
+          echo         \), >> version.txt
+          echo         VarFileInfo\([VarStruct\(u'Translation', \[1033, 1200\]\)]\) >> version.txt
+          echo     \] >> version.txt
+          echo \) >> version.txt
+
+      - name: Build executable with PyInstaller (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          pyinstaller --onefile --windowed delete_media_from_zip.py --version-file version.txt
 
       - name: Zip the .app bundle (macOS)
         if: matrix.os == 'macos-latest'
         run: |
+          pyinstaller --onefile --windowed delete_media_from_zip.py
           zip -r dist/delete_media_from_zip.zip dist/delete_media_from_zip.app
 
       - name: Verify build output (Windows)
