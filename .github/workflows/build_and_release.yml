@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest, windows-latest]  # Only macOS and Windows
         include:
           - os: macos-latest
             platform: macos
@@ -26,25 +26,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies on Ubuntu
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libgtk-3-dev \
-            libjpeg-dev \
-            libtiff-dev \
-            libsdl1.2-dev \
-            libnotify-dev \
-            freeglut3-dev \
-            libsm-dev \
-            libgtk2.0-dev \
-            libgtk-3-dev
-
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.9  # Ensure Python 3.9 is used
 
       - name: Install Python dependencies
         run: |
@@ -57,8 +42,8 @@ jobs:
         env:
           WXWIN: ${{ github.workspace }}  # Fix for wxPython on Windows
 
-      - name: Verify build output (Linux/Mac)
-        if: matrix.os != 'windows-latest'
+      - name: Verify build output (macOS)
+        if: matrix.os == 'macos-latest'
         run: |
           ls -al dist/
 
@@ -73,8 +58,8 @@ jobs:
           open dist/delete_media_from_zip${{ matrix.extension }} --args --help
         continue-on-error: true  # Continue even if the test fails
 
-      - name: Test the built executable on Linux/Windows
-        if: matrix.os != 'macos-latest'
+      - name: Test the built executable on Windows
+        if: matrix.os == 'windows-latest'
         run: |
           ./dist/delete_media_from_zip${{ matrix.extension }} --help
         continue-on-error: true  # Continue even if the test fails
@@ -89,14 +74,8 @@ jobs:
   create-release:
     name: Create GitHub Release
     needs: build-and-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # The release creation can still run on ubuntu-latest
     steps:
-      - name: Download build artifacts for Linux
-        if: always()
-        uses: actions/download-artifact@v3
-        with:
-          name: delete_media_from_zip_linux
-          path: builds/
       - name: Download build artifacts for macOS
         if: always()
         uses: actions/download-artifact@v3
@@ -114,11 +93,11 @@ jobs:
         if: always()
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}  # Use the actual tag name
+          name: Release ${{ github.ref_name }}  # Name the release after the tag
           body: |
             ## Changelog
-            - Auto-generated release for ${{ github.ref }}
+            - Auto-generated release for ${{ github.ref_name }}
 
             ### Assets
             - Windows (.exe)
@@ -130,8 +109,8 @@ jobs:
         if: always()
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          name: ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           files: |
             builds/delete_media_from_zip_windows.exe
             builds/delete_media_from_zip_macos
