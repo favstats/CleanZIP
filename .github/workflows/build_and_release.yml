@@ -39,11 +39,10 @@ jobs:
       - name: Generate version.txt for Windows
         if: matrix.os == 'windows-latest'
         run: |
-          TAG_VERSION="${{ github.ref_name }}"  # Get the tag version
-          VERSION_NUMBERS=$(echo $TAG_VERSION | sed 's/v//;s/\./, /g')
-          cp version_template.txt version.txt
-          sed -i "s/{{VERSION_NUMBERS}}/$VERSION_NUMBERS/" version.txt
-          sed -i "s/{{VERSION_STRING}}/$TAG_VERSION/" version.txt
+          $env:TAG_VERSION = "${{ github.ref_name }}"  # Get the tag version
+          $VERSION_NUMBERS = $env:TAG_VERSION.TrimStart('v').Replace('.',', ')
+          (Get-Content version_template.txt) -replace '{{VERSION_NUMBERS}}', $VERSION_NUMBERS -replace '{{VERSION_STRING}}', $env:TAG_VERSION | Set-Content version.txt
+        shell: pwsh
 
       - name: Build executable with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
