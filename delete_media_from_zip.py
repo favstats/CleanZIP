@@ -8,7 +8,7 @@ import shutil
 keep_extensions = ['.csv', '.html', '.json']
 
 # Create a simple GUI to select the ZIP file
-sg.theme('DarkAmber')
+sg.theme('SystemDefault')
 layout = [
     [sg.Text('Select a ZIP file to clean')],
     [sg.Input(), sg.FileBrowse(file_types=(("ZIP files", "*.zip"),))],
