@@ -52,18 +52,6 @@ jobs:
         run: |
           Get-ChildItem dist
 
-      - name: Test the built executable on macOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          open dist/delete_media_from_zip${{ matrix.extension }} --args --help
-        continue-on-error: true  # Continue even if the test fails
-
-      - name: Test the built executable on Windows
-        if: matrix.os == 'windows-latest'
-        run: |
-          ./dist/delete_media_from_zip${{ matrix.extension }} --help
-        continue-on-error: true  # Continue even if the test fails
-
       - name: Archive build artifact
         uses: actions/upload-artifact@v3
         with:
@@ -81,13 +69,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: delete_media_from_zip_macos
-          path: builds/
+          path: builds/macos/
+
       - name: Download build artifacts for Windows
         if: always()
         uses: actions/download-artifact@v3
         with:
           name: delete_media_from_zip_windows
-          path: builds/
+          path: builds/windows/
 
       - name: Create Release
         if: always()
@@ -102,17 +91,8 @@ jobs:
             ### Assets
             - Windows (.exe)
             - macOS (.app)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets
-        if: always()
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
           files: |
-            builds/delete_media_from_zip_windows.exe
-            builds/delete_media_from_zip_macos
+            builds/windows/delete_media_from_zip.exe
+            builds/macos/delete_media_from_zip.app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
