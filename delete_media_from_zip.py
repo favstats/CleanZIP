@@ -4,9 +4,8 @@ import zipfile
 import PySimpleGUIWx as sg  # Use the wxPython version of PySimpleGUI
 import shutil
 
-# Define image and video file extensions
-image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
-video_extensions = ['.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv', '.webm', '.m4v', '.mpeg']
+# Define the file extensions to keep
+keep_extensions = ['.csv', '.html', '.json']
 
 # Create a simple GUI to select the ZIP file
 sg.theme('DarkAmber')
@@ -34,10 +33,10 @@ os.makedirs(temp_folder, exist_ok=True)
 with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
     zip_ref.extractall(temp_folder)
 
-# Delete image and video files within the extracted contents
+# Delete files that do not match the keep_extensions within the extracted contents
 for root, dirs, files in os.walk(temp_folder):
     for file in files:
-        if any(file.lower().endswith(ext) for ext in image_extensions + video_extensions):
+        if not any(file.lower().endswith(ext) for ext in keep_extensions):
             file_path = os.path.join(root, file)
             try:
                 os.remove(file_path)
@@ -52,7 +51,6 @@ with zipfile.ZipFile(output_zip_file_path, 'w') as zip_ref:
         for file in files:
             file_path = os.path.join(root, file)
             zip_ref.write(file_path, os.path.relpath(file_path, temp_folder))
-
 
 # Clean up the temporary folder
 try:
