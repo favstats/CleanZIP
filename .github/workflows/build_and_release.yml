@@ -42,22 +42,29 @@ jobs:
         env:
           WXWIN: ${{ github.workspace }}  # Fix for wxPython on Windows
 
-      - name: Verify build output (macOS)
+      - name: Zip the .app bundle (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-          ls -al dist/
+          zip -r dist/delete_media_from_zip.zip dist/delete_media_from_zip.app
 
       - name: Verify build output (Windows)
         if: matrix.os == 'windows-latest'
         run: |
           Get-ChildItem dist
 
-      - name: Archive build artifact
+      - name: Archive build artifact (Windows)
+        if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: delete_media_from_zip_${{ matrix.platform }}
-          path: dist/delete_media_from_zip${{ matrix.extension }}
-        if: success()  # Only upload if the build was successful
+          name: delete_media_from_zip_windows
+          path: dist/delete_media_from_zip.exe
+
+      - name: Archive build artifact (macOS)
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: delete_media_from_zip_macos
+          path: dist/delete_media_from_zip.zip
 
   create-release:
     name: Create GitHub Release
@@ -90,9 +97,9 @@ jobs:
 
             ### Assets
             - Windows (.exe)
-            - macOS (.app)
+            - macOS (.zip)
           files: |
             builds/windows/delete_media_from_zip.exe
-            builds/macos/delete_media_from_zip.app
+            builds/macos/delete_media_from_zip.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
