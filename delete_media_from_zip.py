@@ -6,7 +6,7 @@ import shutil
 
 # Define image and video file extensions
 image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
-video_extensions = ['.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv', '.webm', '.m4v']
+video_extensions = ['.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv', '.webm', '.m4v', '.mpeg']
 
 # Create a simple GUI to select the ZIP file
 sg.theme('DarkAmber')

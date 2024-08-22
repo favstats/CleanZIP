@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 dependencies = [
-    "wxPython",
+    "wxPython==4.1.1",  # Specify a version with pre-built wheels available
     "PySimpleGUIWx",
     "pyinstaller"
 ]
