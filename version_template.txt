@@ -1,0 +1,32 @@
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=[{{VERSION_NUMBERS}}, 0],
+    prodvers=[{{VERSION_NUMBERS}}, 0],
+    mask=0x3f,
+    flags=0x0,
+    OS=0x4,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0,0)
+  ),
+  kids=[
+    StringFileInfo(
+      [
+      StringTable(
+        u"040904B0",
+        [
+        StringStruct(u"CompanyName", u"University of Amsterdam"),
+        StringStruct(u"FileDescription", u"Delete Media From ZIP"),
+        StringStruct(u"FileVersion", u"{{VERSION_STRING}}"),
+        StringStruct(u"InternalName", u"DeleteMediaFromZIP"),
+        StringStruct(u"LegalCopyright", u"© Dr. Fabio Votta. Distributed under the MIT License."),
+        StringStruct(u"OriginalFilename", u"DeleteMediaFromZIP.exe"),
+        StringStruct(u"ProductName", u"Delete Media From ZIP"),
+        StringStruct(u"ProductVersion", u"{{VERSION_STRING}}")
+        ]
+      )
+      ]
+    ),
+    VarFileInfo([VarStruct(u"Translation", [1033, 1200])])
+  ]
+)
