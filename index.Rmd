@@ -1,0 +1,94 @@
+---
+title: "CleanZIP"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: cosmo
+    source_code: embed
+    navbar:
+      - { text: "GitHub", href: "https://github.com/favstats/CleanZIP", icon: "fa-github" }
+---
+
+<style>
+  /* Importing and using a clean, modern font */
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* Centering the content and setting a max width */
+  .desktop-layout {
+    max-width: 1000px;  /* Sets maximum width */
+    margin: 10 auto;  /* Centers the dashboard content */
+    padding: 10px;  /* Adds some padding for better spacing */
+  }
+
+  /* Make sure the footer is at the bottom */
+  footer {
+    background-color: #f8f9fa;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9em;
+    width: 100%;
+    position: fixed;  /* Fixes the footer to the bottom of the viewport */
+    bottom: 0;  /* Positions the footer at the bottom */
+    left: 0;
+    border-top: 1px solid #ddd;
+  }
+
+  .navbar-brand {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* Adds padding to the bottom of the page to ensure content is not hidden behind the footer */
+  .content {
+    padding-bottom: 40px; 
+  }
+</style>
+
+Row {data-height=350}
+-------------------------------------
+
+### Welkom
+
+**Welkom bij CleanZIP**! Dit hulpmiddel is ontworpen om ZIP-bestanden te schonen door alle mediabestanden (zoals afbeeldingen en video’s) te verwijderen en alleen specifieke bestandstypen te behouden (namelijk .csv, .html, en .json).
+
+<center>
+
+![](download.png)
+   
+</center>
+
+Download gewoon het nieuwste bestand van de releases:
+
+- **Windows**: [Download CleanZIP voor Windows](https://github.com/favstats/CleanZIP/releases/download/v1.1.8/CleanZIP.exe)
+- **macOS**: [Download CleanZIP voor macOS](https://github.com/favstats/CleanZIP/releases/download/v1.1.8/CleanZIP.zip)
+- **Linux**: [Download CleanZIP voor Linux](https://github.com/favstats/CleanZIP/releases/download/v1.1.8/CleanZIP)
+
+
+
+Row
+-------------------------------------
+
+### Gebruik
+
+1. **Selecteer een ZIP-bestand**: Gebruik de GUI om het ZIP-bestand dat u wilt opschonen te bladeren en te selecteren.
+
+<center>
+
+![](i.png)
+   
+</center>
+   
+2. **Verwerk het ZIP-bestand**: Het hulpmiddel verwijdert alle bestanden behalve die met de extensies .csv, .html en .json (zoals ingesteld).
+
+3. **Bekijk Resultaten**: Er verschijnt een popup die u informeert over het succes, en u kunt het schoongemaakte ZIP-bestand op de opgegeven locatie bekijken.
+
+4. **Het ZIP-bestand is klaar**: U kunt nu het nieuwe bestand indienen, met de extensie `_cleaned.zip`.
+
+
+---
+
+<footer>
+  &copy; 2024 CleanZIP Project. Contact: Dr. Fabio Votta (f.a.votta@uva.nl) Alle rechten voorbehouden. | <a href="https://github.com/favstats/CleanZIP" target="_blank">GitHub</a> 
+</footer>
