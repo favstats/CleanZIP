@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZIP File Cleaner</title>
+    <style>
+        #progressBar {
+            width: 100%;
+            background-color: #f3f3f3;
+            margin-top: 20px;
+        }
+
+        #progressBarFill {
+            width: 0%;
+            height: 30px;
+            background-color: #4caf50;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload and Clean ZIP File</h1>
+    <input type="file" id="zipFileInput" accept=".zip">
+    <button id="cleanButton">Clean ZIP</button>
+    <a id="downloadLink" style="display: none;">Download Cleaned ZIP</a>
+    <div id="status"></div>
+    <div id="progressBar">
+        <div id="progressBarFill">0%</div>
+    </div>
+
+    <script type="module">
+        import init, { filter_zip } from './pkg/clean_zip.js';
+
+        async function initWasm() {
+            await init();  // Initialize WASM module
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').innerText = message;
+        }
+
+        function updateProgressBar(percentage) {
+            const progressBarFill = document.getElementById('progressBarFill');
+            progressBarFill.style.width = percentage + '%';
+            progressBarFill.innerText = percentage + '%';
+        }
+
+        document.getElementById('cleanButton').addEventListener('click', async () => {
+            const zipFileInput = document.getElementById('zipFileInput');
+            const downloadLink = document.getElementById('downloadLink');
+
+            if (!zipFileInput.files.length) {
+                alert('Please upload a zip file first.');
+                return;
+            }
+
+            const file = zipFileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = async (event) => {
+                updateStatus('File loaded into memory. Starting processing...');
+                const arrayBuffer = event.target.result;
+                const uint8Array = new Uint8Array(arrayBuffer);
+
+                try {
+                    updateStatus('Processing ZIP file with WebAssembly...');
+                    const result = filter_zip(uint8Array);
+                    const blob = new Blob([result], { type: 'application/zip' });
+
+                    const url = URL.createObjectURL(blob);
+                    downloadLink.href = url;
+                    downloadLink.download = 'cleaned_files.zip';
+                    downloadLink.style.display = 'block';
+                    downloadLink.textContent = 'Download Cleaned ZIP';
+                    updateStatus('Cleaning complete. Ready to download.');
+                } catch (error) {
+                    alert('An error occurred while processing the zip file.');
+                    console.error(error);
+                    updateStatus('An error occurred. Check console for details.');
+                }
+            };
+
+            updateStatus('Reading file...');
+            updateProgressBar(0);
+            reader.readAsArrayBuffer(file);
+        });
+
+        initWasm();
+    </script>
+</body>
+</html>
