@@ -1,0 +1,15 @@
+{
+  "name": "clean_zip",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "clean_zip_bg.wasm",
+    "clean_zip.js",
+    "clean_zip.d.ts"
+  ],
+  "main": "clean_zip.js",
+  "types": "clean_zip.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
